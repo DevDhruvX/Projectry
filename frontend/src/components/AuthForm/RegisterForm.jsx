@@ -1,5 +1,5 @@
-// frontend/src/components/AuthForm/RegisterForm.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient';
 
 const initialState = {
@@ -16,6 +16,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,10 +27,10 @@ const RegisterForm = ({ onSwitchToLogin }) => {
     setError('');
     setSuccess('');
     setLoading(true);
-    
+
     try {
       console.log('Attempting registration with:', form.email);
-      
+
       const { data, error } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
@@ -42,7 +43,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
           },
         },
       });
-      
+
       if (error) {
         console.error('Registration error:', error);
         setError(error.message);
@@ -50,6 +51,11 @@ const RegisterForm = ({ onSwitchToLogin }) => {
         console.log('Registration successful:', data);
         setSuccess('Registration successful! Please check your email to verify your account.');
         setForm(initialState);
+        
+        // Optional: Automatically navigate to login page after register success
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -66,13 +72,13 @@ const RegisterForm = ({ onSwitchToLogin }) => {
       autoComplete="off"
     >
       <h2 className="text-white text-[28px] font-bold text-center mb-6">Create Your Account</h2>
-      
+
       {error && (
         <div className="mb-4 p-3 bg-red-900/50 border border-red-500 rounded-lg text-red-400 text-sm text-center">
           {error}
         </div>
       )}
-      
+
       {success && (
         <div className="mb-4 p-3 bg-green-900/50 border border-green-500 rounded-lg text-green-400 text-sm text-center">
           {success}
@@ -114,7 +120,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
           onChange={handleChange}
           required
           placeholder="Create a password (min 6 characters)"
-          minLength="6"
+          minLength={6}
           className="form-input rounded-xl bg-[#2b3740] text-white h-14 p-4 placeholder:text-[#9eafbd] border border-transparent focus:border-[#c9dcec] focus:outline-none transition"
         />
       </label>
@@ -169,7 +175,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
       >
         {loading ? "Registering..." : "Register"}
       </button>
-      
+
       <p
         className="text-[#9eafbd] text-sm underline text-center cursor-pointer hover:text-white transition"
         onClick={onSwitchToLogin}

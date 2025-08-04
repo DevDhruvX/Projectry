@@ -1,4 +1,3 @@
-// frontend/src/pages/Register.jsx
 import React from 'react';
 import RegisterForm from '../components/AuthForm/RegisterForm';
 import { useNavigate } from 'react-router-dom';

@@ -1,4 +1,3 @@
-// frontend/src/pages/Login.jsx
 import React from 'react';
 import LoginForm from '../components/AuthForm/LoginForm.jsx';
 import { useNavigate } from 'react-router-dom';
